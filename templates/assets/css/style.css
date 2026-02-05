@@ -2677,3 +2677,480 @@ body {
     width: 100%;
   }
 }
+
+/* ==================== ENHANCED MOBILE RESPONSIVE ==================== */
+@media (max-width: 480px) {
+  /* Container */
+  .container {
+    padding: 0 15px;
+  }
+  
+  /* Navbar Mobile */
+  .navbar {
+    padding: 10px 0;
+  }
+  
+  .nav-container {
+    padding: 0 15px;
+  }
+  
+  .logo {
+    font-size: 20px;
+  }
+  
+  .logo img {
+    width: 28px;
+    height: 28px;
+  }
+  
+  .nav-links {
+    display: none;
+  }
+  
+  .nav-buttons {
+    gap: 8px;
+  }
+  
+  .nav-buttons .btn-login {
+    padding: 8px 12px;
+    font-size: 12px;
+  }
+  
+  .nav-buttons .btn-primary {
+    padding: 8px 14px;
+    font-size: 12px;
+  }
+  
+  /* Hero Section Mobile */
+  .hero {
+    padding: 100px 0 60px;
+    min-height: auto;
+  }
+  
+  .hero-content {
+    padding: 0 10px;
+  }
+  
+  .hero-badge {
+    font-size: 12px;
+    padding: 8px 16px;
+    margin-bottom: 20px;
+  }
+  
+  .hero h1 {
+    font-size: 28px !important;
+    line-height: 1.2;
+    margin-bottom: 15px;
+  }
+  
+  .hero p {
+    font-size: 14px;
+    line-height: 1.5;
+    margin-bottom: 25px;
+    padding: 0 10px;
+  }
+  
+  /* Search Bar Mobile */
+  .search-container {
+    padding: 0 10px;
+    margin-top: 20px;
+  }
+  
+  .search-bar {
+    flex-direction: column;
+    gap: 10px;
+    padding: 15px;
+    border-radius: 15px;
+  }
+  
+  .search-field {
+    width: 100%;
+  }
+  
+  .search-field input,
+  .search-field select {
+    padding: 12px 15px;
+    font-size: 14px;
+    width: 100%;
+  }
+  
+  .search-btn {
+    width: 100%;
+    padding: 14px;
+    font-size: 14px;
+    border-radius: 10px;
+  }
+  
+  /* Voice Search Banner Mobile */
+  .voice-search-banner {
+    margin: 20px 15px;
+    padding: 15px;
+    border-radius: 12px;
+  }
+  
+  .voice-search-banner p {
+    font-size: 13px;
+  }
+  
+  /* Stats Section Mobile */
+  .stats-section {
+    padding: 40px 15px;
+  }
+  
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+  }
+  
+  .stat-item {
+    padding: 20px 10px;
+  }
+  
+  .stat-number {
+    font-size: 28px;
+  }
+  
+  .stat-label {
+    font-size: 11px;
+  }
+  
+  /* Section Titles Mobile */
+  .section-title {
+    font-size: 24px;
+    margin-bottom: 10px;
+  }
+  
+  .section-subtitle {
+    font-size: 14px;
+    padding: 0 10px;
+  }
+  
+  /* Feature Cards Mobile */
+  .features-grid {
+    grid-template-columns: 1fr;
+    gap: 15px;
+    padding: 0 10px;
+  }
+  
+  .feature-card {
+    padding: 20px;
+  }
+  
+  .feature-card h3 {
+    font-size: 16px;
+  }
+  
+  .feature-card p {
+    font-size: 13px;
+  }
+  
+  /* Job Cards Mobile */
+  .jobs-grid {
+    grid-template-columns: 1fr;
+    gap: 15px;
+    padding: 0 10px;
+  }
+  
+  .job-card {
+    padding: 15px;
+  }
+  
+  .job-card h3 {
+    font-size: 16px;
+  }
+  
+  /* Buttons Mobile */
+  .btn-primary,
+  .btn-secondary {
+    padding: 12px 20px;
+    font-size: 14px;
+  }
+  
+  /* Footer Mobile */
+  .footer {
+    padding: 40px 15px 20px;
+  }
+  
+  .footer-grid {
+    grid-template-columns: 1fr;
+    gap: 30px;
+  }
+  
+  .footer-section h4 {
+    font-size: 16px;
+  }
+  
+  .footer-section a,
+  .footer-section p {
+    font-size: 13px;
+  }
+  
+  /* Testimonials Mobile */
+  .testimonials-slider {
+    padding: 0 10px;
+  }
+  
+  .testimonial-card {
+    padding: 20px;
+    min-width: 280px;
+  }
+  
+  .testimonial-card p {
+    font-size: 13px;
+  }
+  
+  /* CTA Section Mobile */
+  .cta-section {
+    padding: 40px 20px;
+  }
+  
+  .cta-section h2 {
+    font-size: 24px;
+  }
+  
+  .cta-section p {
+    font-size: 14px;
+  }
+  
+  /* Tools Grid Mobile */
+  .tools-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    padding: 0 10px;
+  }
+  
+  .tool-card {
+    padding: 15px 10px;
+  }
+  
+  .tool-card i {
+    font-size: 24px;
+  }
+  
+  .tool-card h4 {
+    font-size: 12px;
+  }
+}
+
+/* Extra Small Devices */
+@media (max-width: 360px) {
+  .hero h1 {
+    font-size: 24px !important;
+  }
+  
+  .hero p {
+    font-size: 13px;
+  }
+  
+  .stats-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  
+  .stat-number {
+    font-size: 24px;
+  }
+  
+  .tools-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+  
+  .nav-buttons .btn-login {
+    display: none;
+  }
+}
+
+/* =====================================================
+   MOBILE RESPONSIVE - HERO & SEARCH BAR
+   ===================================================== */
+
+/* Hero Title Styles */
+.hero-title {
+  font-size: 48px;
+  font-weight: 800;
+  line-height: 1.2;
+  margin-bottom: 20px;
+  color: white;
+}
+
+.hero-title .highlight {
+  background: linear-gradient(135deg, #fed7aa, #ffffff);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.hero-subtitle {
+  font-size: 18px;
+  line-height: 1.6;
+  margin-bottom: 40px;
+  color: rgba(255,255,255,0.9);
+  max-width: 600px;
+}
+
+/* Search Bar Styles */
+.search-container {
+  max-width: 1250px;
+}
+
+.mobile-search {
+  display: grid;
+  grid-template-columns: 3fr 2.3fr 2.4fr auto auto;
+  gap: 12px;
+  background: white;
+  padding: 15px;
+  border-radius: 15px;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+}
+
+.mobile-search .search-field {
+  position: relative;
+}
+
+.mobile-search .search-icon {
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #9ca3af;
+  z-index: 2;
+}
+
+.mobile-search input,
+.mobile-search select {
+  width: 100%;
+  padding: 16px 16px 16px 45px;
+  border: none;
+  border-radius: 10px;
+  font-size: 16px;
+  color: #1f2937;
+  background: #f9fafb;
+  outline: none;
+}
+
+.mobile-search select {
+  cursor: pointer;
+  appearance: none;
+  background-image: url('data:image/svg+xml;charset=UTF-8,%3csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"%3e%3cpolyline points="6,9 12,15 18,9"%3e%3c/polyline%3e%3c/svg%3e');
+  background-repeat: no-repeat;
+  background-position: right 16px center;
+  background-size: 14px;
+  padding-right: 40px;
+}
+
+.mobile-search .voice-btn {
+  background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+  border: none;
+  border-radius: 12px;
+  padding: 16px 20px;
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  font-size: 16px;
+  transition: all 0.3s ease;
+}
+
+.mobile-search .voice-btn:hover {
+  transform: translateY(-2px);
+}
+
+.mobile-search .search-btn {
+  background: linear-gradient(135deg, #f97316, #ea580c);
+  border: none;
+  border-radius: 12px;
+  padding: 16px 24px;
+  color: white;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  font-size: 16px;
+  white-space: nowrap;
+  transition: transform 0.3s ease;
+}
+
+.mobile-search .search-btn:hover {
+  transform: translateY(-2px);
+}
+
+/* Tablet View */
+@media (max-width: 992px) {
+  .hero-title {
+    font-size: 36px;
+  }
+  
+  .hero-subtitle {
+    font-size: 16px;
+    margin-bottom: 30px;
+  }
+  
+  .mobile-search {
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  
+  .mobile-search .hide-mobile {
+    display: none;
+  }
+  
+  .mobile-search .voice-btn,
+  .mobile-search .search-btn {
+    padding: 14px 16px;
+  }
+}
+
+/* Mobile View */
+@media (max-width: 576px) {
+  .hero-title {
+    font-size: 28px !important;
+    padding: 0 10px;
+  }
+  
+  .hero-subtitle {
+    font-size: 14px;
+    padding: 0 10px;
+    margin-bottom: 25px;
+  }
+  
+  .mobile-search {
+    display: flex !important;
+    flex-direction: column;
+    gap: 10px;
+    padding: 12px;
+    margin: 0 10px;
+  }
+  
+  .mobile-search .search-field {
+    width: 100%;
+  }
+  
+  .mobile-search .hide-mobile {
+    display: none;
+  }
+  
+  .mobile-search input,
+  .mobile-search select {
+    padding: 14px 14px 14px 40px;
+    font-size: 15px;
+  }
+  
+  .mobile-search .voice-btn {
+    width: 100%;
+    justify-content: center;
+    padding: 14px;
+  }
+  
+  .mobile-search .search-btn {
+    width: 100%;
+    justify-content: center;
+    padding: 14px;
+  }
+  
+  .search-container {
+    padding: 0;
+  }
+}

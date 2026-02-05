@@ -100,23 +100,23 @@
           <i class="fas fa-rocket"></i>
           India's #1 Job Platform
         </div>
-        <h1 data-aos="fade-up" data-aos-delay="400" style="font-size: 48px !important; font-weight: 800 !important; line-height: 1.2 !important; margin-bottom: 20px !important; color: white !important;">
-          Launch Your Career with <span class="highlight" style="background: linear-gradient(135deg, #fed7aa, #ffffff) !important; -webkit-background-clip: text !important; background-clip: text !important; -webkit-text-fill-color: transparent !important;">SkillConnect</span>
+        <h1 data-aos="fade-up" data-aos-delay="400" class="hero-title">
+          Launch Your Career with <span class="highlight">SkillConnect</span>
         </h1>
-        <p data-aos="fade-up" data-aos-delay="600" style="font-size: 18px !important; line-height: 1.6 !important; margin-bottom: 40px !important; color: rgba(255,255,255,0.9) !important; max-width: 600px !important;">
+        <p data-aos="fade-up" data-aos-delay="600" class="hero-subtitle">
           Discover thousands of verified job opportunities from top companies across India. Connect with your dream job today and build your future!
         </p>
         
         <!-- Search Bar -->
-        <div class="search-container" data-aos="fade-up" data-aos-delay="800" style="max-width: 1250px !important;">
-          <div class="search-bar" style="display: grid !important; grid-template-columns: 3fr 2.3fr 2.4fr auto auto !important; gap: 12px !important; background: white !important; padding: 15px !important; border-radius: 15px !important; box-shadow: 0 10px 40px rgba(0,0,0,0.15) !important;">
-            <div class="search-field" style="position: relative !important;">
-              <i class="fas fa-search search-icon" style="position: absolute !important; left: 16px !important; top: 50% !important; transform: translateY(-50%) !important; color: #9ca3af !important; z-index: 2 !important;"></i>
-              <input type="text" id="search-keyword" placeholder="Job title, keywords, or company" style="width: 100% !important; padding: 16px 16px 16px 45px !important; border: none !important; border-radius: 10px !important; font-size: 16px !important; color: #1f2937 !important; background: #f9fafb !important; outline: none !important;">
+        <div class="search-container" data-aos="fade-up" data-aos-delay="800">
+          <div class="search-bar mobile-search">
+            <div class="search-field">
+              <i class="fas fa-search search-icon"></i>
+              <input type="text" id="search-keyword" placeholder="Job title, keywords">
             </div>
-            <div class="search-field" style="position: relative !important;">
-              <i class="fas fa-map-marker-alt search-icon" style="position: absolute !important; left: 16px !important; top: 50% !important; transform: translateY(-50%) !important; color: #9ca3af !important; z-index: 2 !important;"></i>
-              <select id="search-location" style="width: 100% !important; min-width: 185px !important; padding: 16px 40px 16px 45px !important; border: none !important; border-radius: 10px !important; font-size: 15px !important; color: #1f2937 !important; background: #f9fafb !important; outline: none !important; cursor: pointer !important; appearance: none !important; background-image: url('data:image/svg+xml;charset=UTF-8,%3csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'2\' stroke-linecap=\'round\' stroke-linejoin=\'round\'%3e%3cpolyline points=\'6,9 12,15 18,9\'%3e%3c/polyline%3e%3c/svg%3e') !important; background-repeat: no-repeat !important; background-position: right 16px center !important; background-size: 14px !important;">
+            <div class="search-field">
+              <i class="fas fa-map-marker-alt search-icon"></i>
+              <select id="search-location">
                 <option value="">All Locations</option>
                 <option value="mumbai">Mumbai</option>
                 <option value="pune">Pune</option>
@@ -127,9 +127,9 @@
                 <option value="remote">Remote</option>
               </select>
             </div>
-            <div class="search-field" style="position: relative !important;">
-              <i class="fas fa-briefcase search-icon" style="position: absolute !important; left: 16px !important; top: 50% !important; transform: translateY(-50%) !important; color: #9ca3af !important; z-index: 2 !important;"></i>
-              <select id="search-category" style="width: 100% !important; min-width: 180px !important; padding: 16px 45px 16px 45px !important; border: none !important; border-radius: 10px !important; font-size: 15px !important; color: #1f2937 !important; background: #f9fafb !important; outline: none !important; cursor: pointer !important; appearance: none !important; background-image: url('data:image/svg+xml;charset=UTF-8,%3csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' stroke-width=\'2\' stroke-linecap=\'round\' stroke-linejoin=\'round\'%3e%3cpolyline points=\'6,9 12,15 18,9\'%3e%3c/polyline%3e%3c/svg%3e') !important; background-repeat: no-repeat !important; background-position: right 16px center !important; background-size: 14px !important;">
+            <div class="search-field hide-mobile">
+              <i class="fas fa-briefcase search-icon"></i>
+              <select id="search-category">
                 <option value="">All Category</option>
                 <option value="it">IT & Software</option>
                 <option value="marketing">Marketing</option>
@@ -140,12 +140,12 @@
                 <option value="engineering">Engineering</option>
               </select>
             </div>
-            <button id="home-voice-search" style="background: linear-gradient(135deg, #8b5cf6, #7c3aed) !important; border: none !important; border-radius: 12px !important; padding: 16px 20px !important; color: white !important; cursor: pointer !important; display: flex !important; align-items: center !important; gap: 8px !important; font-weight: 600 !important; font-size: 16px !important; transition: all 0.3s ease !important;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'" title="Voice Search - Click & Speak">
+            <button id="home-voice-search" class="voice-btn" title="Voice Search">
               <i class="fas fa-microphone" id="home-voice-icon"></i>
             </button>
-            <button class="search-btn" id="search-btn" style="background: linear-gradient(135deg, #f97316, #ea580c) !important; border: none !important; border-radius: 12px !important; padding: 16px 24px !important; color: white !important; cursor: pointer !important; display: flex !important; align-items: center !important; gap: 8px !important; font-weight: 600 !important; font-size: 16px !important; white-space: nowrap !important; transition: transform 0.3s ease !important;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+            <button class="search-btn" id="search-btn">
               <i class="fas fa-search"></i>
-              <span>Search</span>
+              <span class="hide-mobile">Search</span>
             </button>
           </div>
           <div style="text-align: center; margin-top: 15px;">
