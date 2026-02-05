@@ -1068,7 +1068,12 @@
             
             if (profilePictureUrl) {
                 // Show profile picture
-                profileImg.src = `https://skillconnect-backend-jcn0.onrender.com${profilePictureUrl}`;
+                // Check if URL is already absolute (Cloudinary) or relative
+                if (profilePictureUrl.startsWith('http')) {
+                    profileImg.src = profilePictureUrl;
+                } else {
+                    profileImg.src = `https://skillconnect-backend-jcn0.onrender.com${profilePictureUrl}`;
+                }
                 profileImg.style.display = 'block';
                 profileIcon.style.display = 'none';
             } else {
