@@ -460,10 +460,23 @@
                 icon: companyIcons[iconIndex]
             };
         }
-        // Fetch companies data from backend
+        
+        // Fetch companies data from backend with timeout
         async function fetchCompanies() {
+            // Show loading message update for slow server
+            setTimeout(() => {
+                const loader = document.querySelector('.loading-companies p');
+                if (loader && loader.textContent.includes('Loading')) {
+                    loader.textContent = 'Server is waking up, please wait...';
+                }
+            }, 3000);
+            
             try {
-                const response = await fetch(`${API_BASE_URL}/jobs/`);
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 30000); // 30 second timeout
+                
+                const response = await fetch(`${API_BASE_URL}/jobs/`, { signal: controller.signal });
+                clearTimeout(timeoutId);
                 const jobs = await response.json();
                 
                 // Group jobs by company and create company objects
