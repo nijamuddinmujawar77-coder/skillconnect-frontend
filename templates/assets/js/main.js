@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', function() {
   if (typeof AOS !== 'undefined') {
     AOS.init({
       duration: 800,
-      offset: 50,s
+      offset: 50,
       once: true,
       disable: false
     });
