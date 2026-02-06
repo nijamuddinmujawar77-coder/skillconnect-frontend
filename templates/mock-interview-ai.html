@@ -606,6 +606,9 @@
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script src="assets/js/main.js"></script>
     <script>
+        // API Configuration - Live Server
+        const API_BASE_URL = 'https://skillconnect-backend-jcn0.onrender.com/api';
+        
         // Initialize AOS
         AOS.init({
             duration: 800,
@@ -619,6 +622,7 @@
         let timerInterval;
         let startTime;
         let isRecording = false;
+        let currentQuestionText = '';
 
         const questions = {
             technical: [
@@ -722,6 +726,8 @@
             const questionIndex = (currentQuestion - 1) % questionSet.length;
             const currentQ = questionSet[questionIndex];
             
+            currentQuestionText = currentQ.question;
+            
             document.getElementById('questionCounter').textContent = `Question ${currentQuestion} of ${totalQuestions}`;
             document.getElementById('questionText').textContent = currentQ.question;
             document.getElementById('questionTip').textContent = currentQ.tip;
@@ -738,8 +744,117 @@
                 return;
             }
             
-            // Show feedback for current response
-            showFeedback();
+            // Show AI feedback for current response
+            getAIFeedback(currentQuestionText, response);
+        }
+
+        function getAIFeedback(question, answer) {
+            showNotification('AI is analyzing your response...', 'info');
+            
+            const jobRole = selectedType === 'technical' ? 'Software Developer' : 
+                           selectedType === 'leadership' ? 'Team Lead' : 'Professional';
+            
+            fetch(`${API_BASE_URL}/ai/interview-feedback/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    question: question,
+                    answer: answer,
+                    job_role: jobRole
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    displayAIFeedback(data.feedback);
+                } else {
+                    showFallbackFeedback();
+                }
+                
+                // Move to next question after showing feedback
+                if (currentQuestion < totalQuestions) {
+                    setTimeout(() => {
+                        currentQuestion++;
+                        loadQuestion();
+                    }, 4000);
+                } else {
+                    setTimeout(() => {
+                        completeInterview();
+                    }, 4000);
+                }
+            })
+            .catch(error => {
+                console.error('Feedback error:', error);
+                showFallbackFeedback();
+                
+                if (currentQuestion < totalQuestions) {
+                    setTimeout(() => {
+                        currentQuestion++;
+                        loadQuestion();
+                    }, 3000);
+                } else {
+                    setTimeout(() => {
+                        completeInterview();
+                    }, 3000);
+                }
+            });
+        }
+
+        function displayAIFeedback(feedback) {
+            const feedbackSection = document.getElementById('feedbackSection');
+            feedbackSection.style.display = 'block';
+            
+            const scores = feedback.scores || {};
+            
+            document.getElementById('clarityScore').textContent = scores.clarity || 7.5;
+            document.getElementById('relevanceScore').textContent = scores.relevance || 8.0;
+            document.getElementById('confidenceScore').textContent = scores.confidence || 7.5;
+            
+            document.getElementById('feedbackText').textContent = feedback.feedback || 'Good response!';
+            
+            // Update improvement tips
+            const tipsContainer = document.querySelector('.improvement-tips');
+            if (tipsContainer && feedback.improvements) {
+                tipsContainer.innerHTML = feedback.improvements.map(tip => `
+                    <li class="improvement-tip">
+                        <i class="fas fa-lightbulb tip-icon"></i>
+                        <span>${tip}</span>
+                    </li>
+                `).join('');
+            }
+            
+            showNotification(`Overall Score: ${scores.overall || 7.5}/10 🎯`, 'success');
+        }
+
+        function showFallbackFeedback() {
+            const feedbackSection = document.getElementById('feedbackSection');
+            feedbackSection.style.display = 'block';
+            
+            const scores = {
+                clarity: (7 + Math.random() * 3).toFixed(1),
+                relevance: (7.5 + Math.random() * 2.5).toFixed(1),
+                confidence: (7 + Math.random() * 3).toFixed(1)
+            };
+            
+            document.getElementById('clarityScore').textContent = scores.clarity;
+            document.getElementById('relevanceScore').textContent = scores.relevance;
+            document.getElementById('confidenceScore').textContent = scores.confidence;
+            
+            const feedbacks = [
+                "Good response! You provided relevant information.",
+                "Well structured answer. Consider adding more specific examples.",
+                "Clear communication. Try to be more concise in delivery."
+            ];
+            
+            document.getElementById('feedbackText').textContent = 
+                feedbacks[Math.floor(Math.random() * feedbacks.length)];
+        }
+
+        function showFeedback() {
+            // Now handled by getAIFeedback
+            showFallbackFeedback();
             
             if (currentQuestion < totalQuestions) {
                 setTimeout(() => {
@@ -751,33 +866,6 @@
                     completeInterview();
                 }, 3000);
             }
-        }
-
-        function showFeedback() {
-            const feedbackSection = document.getElementById('feedbackSection');
-            feedbackSection.style.display = 'block';
-            
-            // Generate random realistic scores
-            const scores = {
-                clarity: (7 + Math.random() * 3).toFixed(1),
-                relevance: (7.5 + Math.random() * 2.5).toFixed(1),
-                confidence: (7 + Math.random() * 3).toFixed(1)
-            };
-            
-            document.getElementById('clarityScore').textContent = scores.clarity;
-            document.getElementById('relevanceScore').textContent = scores.relevance;
-            document.getElementById('confidenceScore').textContent = scores.confidence;
-            
-            // Random feedback messages
-            const feedbacks = [
-                "Excellent response! You provided specific examples and showed good problem-solving skills.",
-                "Good answer! Consider adding more quantifiable results to strengthen your response.",
-                "Well structured response. You could improve by being more concise in your delivery.",
-                "Great use of the STAR method. Your answer was clear and relevant to the question."
-            ];
-            
-            document.getElementById('feedbackText').textContent = 
-                feedbacks[Math.floor(Math.random() * feedbacks.length)];
         }
 
         function skipQuestion() {

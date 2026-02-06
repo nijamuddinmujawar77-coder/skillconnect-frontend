@@ -674,6 +674,10 @@
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script src="assets/js/main.js"></script>
     <script>
+        // API Configuration - Live Server
+        const API_BASE_URL = 'https://skillconnect-backend-jcn0.onrender.com/api';
+        let currentAnalysis = null;
+        
         // Initialize AOS
         AOS.init({
             duration: 800,
@@ -760,30 +764,52 @@ Responsibilities:
             
             // Show loading
             document.getElementById('loadingSection').style.display = 'block';
-            showNotification('Analyzing job match...', 'info');
+            showNotification('AI is analyzing your job match...', 'info');
             
-            // Simulate AI analysis
-            setTimeout(() => {
+            // Call real AI API
+            fetch(`${API_BASE_URL}/ai/job-match/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    profile: profile,
+                    job_description: job
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
                 document.getElementById('loadingSection').style.display = 'none';
-                document.getElementById('resultsSection').style.display = 'block';
                 
-                // Generate realistic scores based on content
-                generateScores();
-                animateResults();
-                
-                showNotification('Analysis complete! Check your match results below.', 'success');
-            }, 3000);
+                if (data.success) {
+                    currentAnalysis = data.analysis;
+                    document.getElementById('resultsSection').style.display = 'block';
+                    displayAnalysis(data.analysis);
+                    showNotification('AI Analysis complete! 🎯', 'success');
+                } else {
+                    showNotification(data.error || 'Analysis failed. Please try again.', 'error');
+                }
+            })
+            .catch(error => {
+                document.getElementById('loadingSection').style.display = 'none';
+                console.error('Analysis error:', error);
+                showNotification('Could not connect to server. Please try again.', 'error');
+            });
         }
 
-        function generateScores() {
-            // Generate realistic scores (75-95 range)
-            const baseScore = Math.floor(Math.random() * 20 + 75);
-            const skillsScore = Math.floor(Math.random() * 15 + 80);
-            const experienceScore = Math.floor(Math.random() * 15 + 85);
-            const educationScore = Math.floor(Math.random() * 20 + 70);
-            const keywordsScore = Math.floor(Math.random() * 15 + 85);
+        function displayAnalysis(analysis) {
+            // Update overall score
+            const overallScore = analysis.overall_match || 75;
+            document.getElementById('matchScore').textContent = overallScore;
             
-            document.getElementById('matchScore').textContent = baseScore;
+            // Update breakdown scores
+            const breakdown = analysis.breakdown || {};
+            
+            const skillsScore = breakdown.skills_match?.score || 75;
+            const experienceScore = breakdown.experience_match?.score || 75;
+            const educationScore = breakdown.education_match?.score || 75;
+            const keywordsScore = breakdown.keywords_match?.score || 75;
+            
             document.getElementById('skillsScore').textContent = skillsScore + '%';
             document.getElementById('experienceScore').textContent = experienceScore + '%';
             document.getElementById('educationScore').textContent = educationScore + '%';
@@ -797,26 +823,82 @@ Responsibilities:
             
             // Update circular score
             const scoreCircle = document.getElementById('scoreCircle');
-            const scoreDeg = (baseScore / 100) * 360;
+            const scoreDeg = (overallScore / 100) * 360;
             scoreCircle.style.setProperty('--score-deg', scoreDeg + 'deg');
             
-            // Update match message based on score
+            // Update match message
             const matchTitle = document.querySelector('.match-title');
             const matchSubtitle = document.querySelector('.match-subtitle');
             
-            if (baseScore >= 90) {
+            if (overallScore >= 90) {
                 matchTitle.textContent = 'Perfect Match!';
                 matchSubtitle.textContent = 'Your profile is an excellent fit for this position';
-            } else if (baseScore >= 80) {
+            } else if (overallScore >= 80) {
                 matchTitle.textContent = 'Great Match!';
                 matchSubtitle.textContent = 'Your profile strongly aligns with this job opportunity';
-            } else if (baseScore >= 70) {
+            } else if (overallScore >= 70) {
                 matchTitle.textContent = 'Good Match!';
                 matchSubtitle.textContent = 'Your profile shows good compatibility with some areas for improvement';
             } else {
                 matchTitle.textContent = 'Partial Match';
                 matchSubtitle.textContent = 'Consider developing additional skills to better match this role';
             }
+            
+            // Update keywords
+            updateKeywords(breakdown);
+            
+            // Update recommendations
+            updateRecommendations(analysis);
+            
+            // Animate score
+            animateResults();
+        }
+
+        function updateKeywords(breakdown) {
+            const keywordsGrid = document.querySelector('.keywords-grid');
+            if (!keywordsGrid) return;
+            
+            const matched = breakdown.skills_match?.matched_skills || breakdown.keywords_match?.matched_keywords || [];
+            const missing = breakdown.skills_match?.missing_skills || breakdown.keywords_match?.missing_keywords || [];
+            
+            keywordsGrid.innerHTML = `
+                <div class="keywords-column">
+                    <h4>✅ Matched Keywords</h4>
+                    ${matched.map(k => `<span class="keyword-tag">${k}</span>`).join('')}
+                </div>
+                <div class="keywords-column">
+                    <h4>⚠️ Missing Keywords</h4>
+                    ${missing.map(k => `<span class="keyword-tag missing">${k}</span>`).join('')}
+                </div>
+            `;
+        }
+
+        function updateRecommendations(analysis) {
+            const recsGrid = document.querySelector('.recommendations-grid');
+            if (!recsGrid) return;
+            
+            const recommendations = analysis.recommendations || [];
+            const gaps = analysis.gaps || [];
+            
+            let recsHtml = '';
+            
+            recommendations.forEach((rec, index) => {
+                const types = ['Skills Gap', 'Experience', 'Keywords', 'Certifications'];
+                recsHtml += `
+                    <div class="recommendation-item">
+                        <div class="recommendation-type">${types[index % types.length]}</div>
+                        <div class="recommendation-text">${rec}</div>
+                    </div>
+                `;
+            });
+            
+            if (recsHtml) {
+                recsGrid.innerHTML = recsHtml;
+            }
+        }
+
+        function generateScores() {
+            // This is now handled by displayAnalysis
         }
 
         function animateResults() {
