@@ -569,12 +569,17 @@
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script src="assets/js/main.js"></script>
     <script>
+        // API Configuration - Live Server
+        const API_BASE_URL = 'https://skillconnect-backend-jcn0.onrender.com/api';
+        
         // Initialize AOS
         AOS.init({
             duration: 800,
             offset: 100,
             once: true
         });
+
+        let currentAnalysis = null;
 
         function selectFile() {
             document.getElementById('fileInput').click();
@@ -583,64 +588,209 @@
         function handleFileSelect(event) {
             const file = event.target.files[0];
             if (file) {
-                startAnalysis(file.name);
+                analyzeResume(file);
             }
         }
 
         function runDemo() {
-            startAnalysis('demo_resume.pdf');
-        }
-
-        function startAnalysis(fileName) {
-            showNotification(`Analyzing ${fileName}...`, 'info');
+            showNotification('Running demo analysis...', 'info');
             
-            // Hide upload zone and show loading
             document.getElementById('uploadZone').style.display = 'none';
             document.getElementById('loadingSpinner').style.display = 'block';
             
-            // Simulate analysis process
-            setTimeout(() => {
-                document.getElementById('loadingSpinner').style.display = 'none';
-                document.getElementById('analysisResults').style.display = 'block';
-                
-                // Animate score counting
-                animateScore();
-                
-                showNotification('Resume analysis complete! 🎉', 'success');
-            }, 3000);
+            // Call demo endpoint
+            fetch(`${API_BASE_URL}/ai/demo-analysis/`)
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('loadingSpinner').style.display = 'none';
+                    
+                    if (data.success) {
+                        currentAnalysis = data.analysis;
+                        displayAnalysis(data.analysis);
+                        showNotification('Demo analysis complete! 🎉', 'success');
+                    } else {
+                        showError(data.error || 'Demo analysis failed');
+                    }
+                })
+                .catch(error => {
+                    console.error('Demo error:', error);
+                    showError('Could not connect to server. Make sure backend is running.');
+                });
         }
 
-        function animateScore() {
+        function analyzeResume(file) {
+            showNotification(`Analyzing ${file.name}...`, 'info');
+            
+            document.getElementById('uploadZone').style.display = 'none';
+            document.getElementById('loadingSpinner').style.display = 'block';
+            
+            const formData = new FormData();
+            formData.append('resume_file', file);
+            
+            fetch(`${API_BASE_URL}/ai/analyze-resume/`, {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('loadingSpinner').style.display = 'none';
+                
+                if (data.success) {
+                    currentAnalysis = data.analysis;
+                    displayAnalysis(data.analysis);
+                    showNotification('Resume analysis complete! 🎉', 'success');
+                } else {
+                    showError(data.error || 'Analysis failed. Please try again.');
+                }
+            })
+            .catch(error => {
+                console.error('Analysis error:', error);
+                showError('Could not connect to server. Make sure backend is running on port 8000.');
+            });
+        }
+
+        function showError(message) {
+            document.getElementById('loadingSpinner').style.display = 'none';
+            document.getElementById('uploadZone').style.display = 'block';
+            showNotification(message, 'error');
+        }
+
+        function displayAnalysis(analysis) {
+            document.getElementById('analysisResults').style.display = 'block';
+            
+            // Update overall score
             const scoreElement = document.getElementById('overallScore');
+            animateScore(scoreElement, analysis.overall_score || 75);
+            
+            // Update feedback cards
+            updateFeedbackCards(analysis.sections || {});
+        }
+
+        function animateScore(element, target) {
             let current = 0;
-            const target = 85;
             const increment = 2;
             
             const animate = () => {
                 current += increment;
                 if (current >= target) {
-                    scoreElement.textContent = target;
+                    element.textContent = target;
                 } else {
-                    scoreElement.textContent = current;
-                    setTimeout(animate, 50);
+                    element.textContent = current;
+                    setTimeout(animate, 30);
                 }
             };
             
             animate();
         }
 
+        function updateFeedbackCards(sections) {
+            const feedbackGrid = document.querySelector('.feedback-grid');
+            feedbackGrid.innerHTML = '';
+            
+            const sectionConfig = {
+                'formatting': { title: 'Formatting & Structure', icon: 'fa-file-alt' },
+                'keywords': { title: 'Keywords & Skills', icon: 'fa-key' },
+                'contact': { title: 'Contact Information', icon: 'fa-address-card' },
+                'experience': { title: 'Experience Section', icon: 'fa-briefcase' },
+                'education': { title: 'Education', icon: 'fa-graduation-cap' },
+                'skills': { title: 'Technical Skills', icon: 'fa-code' }
+            };
+            
+            for (const [key, section] of Object.entries(sections)) {
+                const config = sectionConfig[key] || { title: key, icon: 'fa-check' };
+                const statusClass = section.status || (section.score >= 80 ? 'good' : section.score >= 60 ? 'warning' : 'error');
+                const statusIcon = statusClass === 'good' ? 'check' : statusClass === 'warning' ? 'exclamation' : 'times';
+                
+                const card = document.createElement('div');
+                card.className = 'feedback-card';
+                card.innerHTML = `
+                    <div class="feedback-category">
+                        <div class="category-icon ${statusClass}">
+                            <i class="fas fa-${statusIcon}"></i>
+                        </div>
+                        <div class="category-title">${config.title}</div>
+                        <div style="margin-left: auto; font-weight: 700; color: var(--primary-teal);">${section.score || 75}/100</div>
+                    </div>
+                    <div class="feedback-text">${section.feedback || 'Analysis complete.'}</div>
+                    <ul class="suggestions-list">
+                        ${(section.suggestions || []).map(s => `
+                            <li class="suggestion-item">
+                                <i class="fas fa-lightbulb"></i>
+                                <span>${s}</span>
+                            </li>
+                        `).join('')}
+                    </ul>
+                `;
+                
+                feedbackGrid.appendChild(card);
+            }
+        }
+
         function downloadReport() {
-            showNotification('Generating detailed PDF report...', 'info');
+            if (!currentAnalysis) {
+                showNotification('No analysis available to download', 'error');
+                return;
+            }
+            
+            showNotification('Generating detailed report...', 'info');
+            
+            const analysis = currentAnalysis;
+            let reportContent = `
+╔══════════════════════════════════════════════════════════════╗
+║              RESUME ANALYSIS REPORT                          ║
+║              Generated by SkillConnect AI                    ║
+╚══════════════════════════════════════════════════════════════╝
+
+📊 OVERALL SCORE: ${analysis.overall_score || 75}/100
+📈 ATS COMPATIBILITY: ${analysis.ats_score || 75}/100
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+✅ STRENGTHS:
+${(analysis.strengths || []).map(s => `   • ${s}`).join('\n')}
+
+⚠️ AREAS FOR IMPROVEMENT:
+${(analysis.improvements || []).map(s => `   • ${s}`).join('\n')}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📝 DETAILED SECTION ANALYSIS:
+
+`;
+            
+            if (analysis.sections) {
+                for (const [key, section] of Object.entries(analysis.sections)) {
+                    reportContent += `
+▶ ${key.toUpperCase()} (Score: ${section.score || 75}/100)
+  ${section.feedback || 'No feedback available'}
+  Suggestions:
+${(section.suggestions || []).map(s => `    - ${s}`).join('\n')}
+
+`;
+                }
+            }
+            
+            reportContent += `
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📌 SUMMARY:
+${analysis.summary || 'Your resume has been analyzed. Please review the sections above for detailed feedback.'}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+🚀 Powered by SkillConnect AI Resume Scanner
+📅 Report Generated: ${new Date().toLocaleString()}
+`;
             
             setTimeout(() => {
-                // Create a simple download simulation
+                const blob = new Blob([reportContent], { type: 'text/plain;charset=utf-8' });
                 const link = document.createElement('a');
-                link.href = `data:text/plain;charset=utf-8,RESUME ANALYSIS REPORT\\n\\nOverall ATS Score: 85/100\\n\\nStrengths:\\n- Clean formatting and structure\\n- Professional contact information\\n- Good use of keywords\\n\\nAreas for Improvement:\\n- Add more quantifiable achievements\\n- Include industry-specific keywords\\n- Strengthen action verbs\\n\\nRecommendations:\\n1. Add metrics to experience descriptions\\n2. Include a technical skills section\\n3. Optimize for target job keywords\\n\\nGenerated by SkillConnect AI Resume Scanner`;
-                link.download = 'resume-analysis-report.txt';
+                link.href = URL.createObjectURL(blob);
+                link.download = `resume-analysis-report-${Date.now()}.txt`;
                 link.click();
                 
                 showNotification('Report downloaded successfully! 📄', 'success');
-            }, 2000);
+            }, 1000);
         }
 
         // Drag and drop functionality
@@ -661,7 +811,12 @@
             
             const files = e.dataTransfer.files;
             if (files.length > 0) {
-                startAnalysis(files[0].name);
+                const file = files[0];
+                if (file.type === 'application/pdf' || file.name.endsWith('.pdf')) {
+                    analyzeResume(file);
+                } else {
+                    showNotification('Please upload a PDF file', 'error');
+                }
             }
         });
 
@@ -690,6 +845,7 @@
                 transform: translateX(400px);
                 transition: transform 0.3s ease;
                 font-weight: 500;
+                max-width: 350px;
             `;
             
             document.body.appendChild(notification);
