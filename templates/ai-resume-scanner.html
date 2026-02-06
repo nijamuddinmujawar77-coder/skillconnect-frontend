@@ -668,8 +668,7 @@
         // Notification function
         function showNotification(message, type = 'info') {
             const notification = document.createElement('div');
-            notification.className = 
-otification notification-${type}`;
+            notification.className = `notification notification-${type}`;
             notification.innerHTML = `
                 <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i>
                 <span>${message}</span>
