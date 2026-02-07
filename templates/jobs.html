@@ -1194,29 +1194,32 @@
             paginationDiv.innerHTML = paginationHTML;
         }
         
-        function goToPage(page) {
+        // Make goToPage global for onclick to work
+        window.goToPage = function(page) {
             currentPage = page;
             displayJobs();
             window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
+        };
         
-        function previousPage() {
+        // Make previousPage global
+        window.previousPage = function() {
             if (currentPage > 1) {
                 currentPage--;
                 displayJobs();
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             }
-        }
+        };
         
-        function nextPage() {
+        // Make nextPage global
+        window.nextPage = function() {
             const totalPages = Math.ceil(filteredJobs.length / jobsPerPage);
             if (currentPage < totalPages) {
                 currentPage++;
                 displayJobs();
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             }
-        }
-        
+        };
+
         function toggleBookmark(jobId) {
             // Bookmark functionality - can be expanded with backend integration
             const button = event.target.closest('.btn-bookmark');
