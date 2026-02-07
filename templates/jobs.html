@@ -626,11 +626,7 @@
                     </div>
                     
                     <div class="pagination" id="pagination" style="display: none;">
-                        <button onclick="previousPage()">&laquo; Previous</button>
-                        <button class="active">1</button>
-                        <button>2</button>
-                        <button>3</button>
-                        <button onclick="nextPage()">Next &raquo;</button>
+                        <!-- Pagination will be rendered dynamically -->
                     </div>
                 </div>
             </div>
@@ -931,6 +927,7 @@
             // Show pagination if needed
             if (filteredJobs.length > jobsPerPage) {
                 document.getElementById('pagination').style.display = 'flex';
+                renderPagination();
             } else {
                 document.getElementById('pagination').style.display = 'none';
             }
@@ -1175,6 +1172,32 @@
             });
             
             displayJobs();
+        }
+        
+        function renderPagination() {
+            const totalPages = Math.ceil(filteredJobs.length / jobsPerPage);
+            const paginationDiv = document.getElementById('pagination');
+            
+            let paginationHTML = `<button onclick="previousPage()" ${currentPage === 1 ? 'disabled' : ''}>&laquo; Previous</button>`;
+            
+            // Show page numbers
+            for (let i = 1; i <= totalPages; i++) {
+                if (i === 1 || i === totalPages || (i >= currentPage - 1 && i <= currentPage + 1)) {
+                    paginationHTML += `<button onclick="goToPage(${i})" class="${currentPage === i ? 'active' : ''}">${i}</button>`;
+                } else if (i === currentPage - 2 || i === currentPage + 2) {
+                    paginationHTML += `<span style="padding: 0 10px;">...</span>`;
+                }
+            }
+            
+            paginationHTML += `<button onclick="nextPage()" ${currentPage === totalPages ? 'disabled' : ''}>Next &raquo;</button>`;
+            
+            paginationDiv.innerHTML = paginationHTML;
+        }
+        
+        function goToPage(page) {
+            currentPage = page;
+            displayJobs();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
         
         function previousPage() {
