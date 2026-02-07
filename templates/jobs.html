@@ -1010,8 +1010,11 @@
         
         // Apply local filters (salary, skills, work mode, date)
         function applyLocalFilters() {
-            const minSalary = parseInt(document.getElementById('min-salary').value) || 0;
-            const maxSalary = parseInt(document.getElementById('max-salary').value) || Infinity;
+            // Convert LPA to actual amount (user enters 4 for 4 LPA, but backend stores 400000)
+            const minSalaryLPA = parseInt(document.getElementById('min-salary').value) || 0;
+            const maxSalaryLPA = parseInt(document.getElementById('max-salary').value) || Infinity;
+            const minSalary = minSalaryLPA * 100000; // Convert to actual amount
+            const maxSalary = maxSalaryLPA === Infinity ? Infinity : maxSalaryLPA * 100000;
             const datePosted = document.getElementById('date-posted').value;
             
             // Get selected skills
@@ -1027,23 +1030,25 @@
             });
             
             filteredJobs = filteredJobs.filter(job => {
-                // Salary filter
+                // Salary filter - backend stores actual amounts like 400000 for 4 LPA
                 let jobMinSalary = 0;
-                let jobMaxSalary = 0;
+                let jobMaxSalary = Infinity;
                 
                 if (job.min_salary && job.max_salary) {
                     jobMinSalary = parseFloat(job.min_salary);
                     jobMaxSalary = parseFloat(job.max_salary);
                 } else if (job.salary_display) {
-                    // Parse salary from display string like "₹8-15 LPA"
+                    // Parse salary from display string like "₹8-12 LPA" and convert to actual
                     const salaryMatch = job.salary_display.match(/₹?(\d+)-(\d+)/);
                     if (salaryMatch) {
-                        jobMinSalary = parseInt(salaryMatch[1]);
-                        jobMaxSalary = parseInt(salaryMatch[2]);
+                        jobMinSalary = parseInt(salaryMatch[1]) * 100000;
+                        jobMaxSalary = parseInt(salaryMatch[2]) * 100000;
                     }
                 }
                 
-                const matchesSalary = jobMaxSalary >= minSalary && jobMinSalary <= maxSalary;
+                // Check if job salary range overlaps with user's desired range
+                const matchesSalary = (minSalary === 0 && maxSalary === Infinity) || 
+                                      (jobMaxSalary >= minSalary && jobMinSalary <= maxSalary);
                 
                 // Skills filter
                 let matchesSkills = true;
