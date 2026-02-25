@@ -1,0 +1,26 @@
+# Netlify / Cloudflare Pages - Clean URL Rewrites
+# /pagename → serves pagename.html (status 200 = rewrite, URL stays clean)
+
+/jobs                   /jobs.html                  200
+/companies              /companies.html             200
+/profile                /profile.html               200
+/resources              /resources.html             200
+/login                  /login.html                 200
+/register               /register.html              200
+/forgot-password        /forgot-password.html       200
+/reset-password         /reset-password.html        200
+/apply                  /apply.html                 200
+/apply-simple           /apply-simple.html          200
+/blog                   /blog.html                  200
+/community              /community.html             200
+/ai-resume-scanner      /ai-resume-scanner.html     200
+/ats-templates          /ats-templates.html         200
+/interview-prep         /interview-prep.html        200
+/job-match-analyzer     /job-match-analyzer.html    200
+/linkedin-optimization  /linkedin-optimization.html 200
+/mock-interview-ai      /mock-interview-ai.html     200
+/resume-builder         /resume-builder.html        200
+/salary-calculator      /salary-calculator.html     200
+/salary-negotiation     /salary-negotiation.html    200
+/skill-development      /skill-development.html     200
+/tech-interview-guide   /tech-interview-guide.html  200
