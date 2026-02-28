@@ -246,8 +246,8 @@
                 
                 <div class="form-group">
                     <label for="phone" class="form-label">Phone Number</label>
-                    <input type="tel" id="phone" class="form-input" placeholder="Enter your phone number" required>
-                    <div class="form-error" id="phone-error">Please enter a valid phone number</div>
+                    <input type="tel" id="phone" class="form-input" placeholder="Enter your phone number" maxlength="10" pattern="[0-9]{10}" oninput="this.value = this.value.replace(/[^0-9]/g, '').slice(0, 10)" required>
+                    <div class="form-error" id="phone-error">Please enter a valid 10-digit phone number</div>
                 </div>
                 
                 <div class="form-group">
