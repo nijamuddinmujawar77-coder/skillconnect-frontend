@@ -2,8 +2,8 @@
 // Change this URL based on environment
 
 const CONFIG = {
-    // Production Backend URL (Render)
-    API_BASE_URL: 'https://skillconnect-backend-jcn0.onrender.com/api',
+    // Production Backend URL (DigitalOcean)
+    API_BASE_URL: 'https://stingray-app-ndaqu.ondigitalocean.app/api',
     
     // Local Development (uncomment for local testing)
     // API_BASE_URL: 'http://127.0.0.1:8000/api',
